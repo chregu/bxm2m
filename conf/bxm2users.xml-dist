@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<mail2blog>
+<!--
+if bloghost is ommitted, emailhost is taken (regexed if type = regex)
+if bloguser is ommitted, emailuser is taken
+-->
+<!-- single user -->
+    <user id="1" emailuser="chregu" bloguser="chregu" emailhost="moblog.bitflux.org" 
+    bloghost="blog.bitflux.ch" path="/xmlrpc.xml" 
+        port="80" imgpath="moblog" imgsize="320" defaultcat="Trips"/>
+
+<!-- more than one user. emailuser and bloguser are taken from the email adress  matching the regexp -->
+    <user id="5" emailuser="" bloguser="" emailhost="#.*\.freeflux\.net#" path="/blog/xmlrpc.xml" 
+        port="80" imgpath="images/moblogs" imgsize="480" defaultcat="Moblog Pictures" type="regex"/>
+
+<!-- open blog. everyone can moblog to lots@lots.bitflux.ch, but only pictures -->
+    <user emailuser="lots" bloguser="moblog" emailhost="lots.bitflux.ch" path="/blog/xmlrpc.xml"
+    	port="80" imgpath="images/moblogs" imgsize="240" defaultcat="Moblogs"
+	defaultpass="foobar" picturesonly="yes"/>
+</mail2blog>

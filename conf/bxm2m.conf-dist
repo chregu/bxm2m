@@ -1,0 +1,14 @@
+<?php
+
+$conf = array();
+$conf['bxm2mlock']      = sprintf("%s/bxm2m.lock", $bxm2mdir);
+$conf['bxm2muserfile']  = sprintf("%s/conf/bxm2users.xml", $bxm2mdir);
+$conf['bxm2mhost']      = 'mail.server.org';
+$conf['bxm2mport']      = 110;
+$conf['bxm2muser']      = 'username';
+$conf['bxm2mpass']      = 'password';
+
+
+
+
+?>
