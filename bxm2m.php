@@ -155,7 +155,8 @@ if (sizeof($incoming) > 0) {
                         /* text/plain text/html */
                         elseif (in_array(strtolower($part->ctype_secondary), $exttxt)) {
                            echo "ttt:  ".$part->ctype_primary."/".$part->ctype_secondary."\n";
-                           $body = trim(decodeBody($part->body,$part->headers['content-transfer-encoding'],$part->ctype_parameters['charset']));
+                           // iphone appends a second text/plain part for the signature, concat all text/plain and text/html parts
+                           $body .= trim(decodeBody($part->body,$part->headers['content-transfer-encoding'],$part->ctype_parameters['charset']));
                         } 
                         /* images */
                         elseif (in_array(strtolower($part->ctype_secondary), $extimg)) {
