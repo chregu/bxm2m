@@ -382,7 +382,7 @@ if (sizeof($incoming) > 0) {
                          );
                          $mime = new Mail_mime($crlf);
                          
-                         $mime->setTXTBody(utf8_decode($text));
+                       
                          
                          
                     }
@@ -451,10 +451,10 @@ if (sizeof($incoming) > 0) {
                             ), 'struct'));
             $msg = new XML_RPC_Message("metaWeblog.newPost", $params);
             $response = $rpc->send($msg);
-/*            echo "rpc response: ";
-            var_dump($response);*/
+
             if ($response!=0 && is_array($response->value()->me)) {
                 $postid = array_pop($response->value()->me);
+                
             }                                             
             
             /* requests for category and images */
@@ -462,9 +462,14 @@ if (sizeof($incoming) > 0) {
                 // if posted and mime for flickr is set... 
                  if ($mime) {
                        //do not ever try to call these lines in reverse order
+                       $path = str_replace("xmlrpc.xml","",$userinfo['path']);
+                       $url = "http://". $userinfo['bloghost'] . $path ."archive/id/".$postid;
+                       $text .= "\n<br /><br  />-- \n<br />" . "Originally uploaded to <a href='$url'>$url</a>";
+                         $mime->setTXTBody(utf8_decode($text));
                          $body = $mime->get();
                          $hdrs = $mime->headers($hdrs);
-                         
+                      //   print $mime->getTXTBody();
+                      print $text ."\n";
                          $mail =& Mail::factory('mail');
                          $mail->send($userinfo['flickr'], $hdrs, $body);
                  } 
@@ -691,7 +696,7 @@ function exif_setGPSCoord($data,$coord) {
 
 
 function exif_writeGpsCoord($g,$coord) {
-    if (isset ($coord['lat'])) {
+    if (isset ($coord['lat']) && ($coord['lat']) || $coord['lat'] === 0 ) {
         $lat = $coord['lat'];
         $c = exif_buildRationalValue($coord['lat']);
         $e1 =  $g->getEntry(PelTag::GPS_LATITUDE_REF);
@@ -709,7 +714,7 @@ function exif_writeGpsCoord($g,$coord) {
         }
         $e2->setValue($c[0],$c[1],$c[2]);
     }
-    if (isset ($coord['lon'])) {
+    if (isset ($coord['lon']) && ($coord['lon']) || $coord['lon'] === 0 ) {
         $lon = $coord['lon'];
         $c = exif_buildRationalValue($coord['lon']);
         $e1 =  $g->getEntry(PelTag::GPS_LONGITUDE_REF);
