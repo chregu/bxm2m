@@ -57,21 +57,45 @@ if ($pop->connect($conf['bxm2mhost'] , $conf['bxm2mport'] )) {
 }
 }
 /* text types */
-$exttxt = array('plain','html');
+$exttxt = array (
+    'plain',
+    'html'
+);
 /* image types */
-$extimg = array('png','gif','jpg','jpeg','octet-stream','applefile');
-/* media types */
-$extmedia = array('mpeg');
+$extimg = array (
+    'png',
+    'gif',
+    'jpg',
+    'jpeg',
+    'octet-stream',
+    'applefile'
+);
 
+/* media types */
+$extmedia = array(
+    'mpeg'
+);
 
 /* command characters */
-$cmdchars = array('!',"#");
+$cmdchars = array (
+    '!',
+    "#"
+);
 /* command map */
-$cmdmap = array('a' => 'tags', 't' => 'title', 'c' => 'category', 'g' => 'gallery', 'p'=>'password');
+$cmdmap = array (
+    'a' => 'tags',
+    't' => 'title',
+    'c' => 'category',
+    'g' => 'gallery',
+    'p' => 'password'
+);
 /* signature delimiters */
 $sigdelim = "#^[\-_]{2,}$#";
 
-$decodeopts = array('include_bodies' => True);
+$decodeopts = array (
+    'include_bodies' => True
+);
+
 $msgs = $pop->numMsg();
 $incoming = array();
 if ($msgs && $msgs > 0) {
