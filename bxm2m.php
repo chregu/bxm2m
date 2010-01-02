@@ -208,34 +208,35 @@ if (sizeof($incoming) > 0) {
                             } else {
                                 $fname = $imagename;
                             }
-                            file_put_contents(dirname(__FILE__) . '/tmp.exif.data' , $imagebody);
-                            $exif = exif_read_data(dirname(__FILE__) . '/tmp.exif.data', 0, true);
-                            
-                            if(isset($exif) && isset($exif['GPS'])){
-                                $lat = current(explode("/", $exif['GPS']['GPSLatitude'][0]));
-                                $lat .= '.'. round(( (current(explode("/", $exif['GPS']['GPSLatitude'][1]) ) ) * 100 ) / 60 );
-                                $lon = current(explode("/", $exif['GPS']['GPSLongitude'][0]));
-                                $lon .= '.'. round(( (current(explode("/", $exif['GPS']['GPSLongitude'][1]) ) ) * 100 ) / 60 );
-                                $mapuri = "http://maps.google.com/maps?q=$lat,$lon";
-                                // $mapaddr = utf8_encode(file_get_contents("http://maps.google.com/maps/geo?q=$lat,$lon&output=csv"));
-                                $mapaddr = file_get_contents("http://maps.google.com/maps/geo?q=$lat,$lon&output=csv");
-                                $tags = '';
-                                $tags .= 'geo:lat='.$lat;
-                                $tags .= ' geo:lon='.$lon;   
-                                if (current(explode(",", $mapaddr)) == "200") {
-                                    $mapaddr = next(explode("\"", $mapaddr));
-                                    $prts = explode(',', $mapaddr);
-                                    $tags .= ' "geo:loc='.str_replace(","," ",$mapaddr).'"';
-                                    if (is_string($prts[1]) && trim($prts[1]) !== 'Switzerland') {
-                                        $tags .= ' '.$prts[1] ;
-                                    } else if (is_string($prts[1]) && trim($prts[1]) == 'Switzerland') {
-                                        $tags .= ' '.$prts[0];        
-                                    } else {
-                                        $mapaddr = $mapuri;    
+                            if (function_exists("exif_read_data")) {
+                                file_put_contents(dirname(__FILE__) . '/tmp.exif.data' , $imagebody);
+                                $exif = exif_read_data(dirname(__FILE__) . '/tmp.exif.data', 0, true);
+                                
+                                if(isset($exif) && isset($exif['GPS'])){
+                                    $lat = current(explode("/", $exif['GPS']['GPSLatitude'][0]));
+                                    $lat .= '.'. round(( (current(explode("/", $exif['GPS']['GPSLatitude'][1]) ) ) * 100 ) / 60 );
+                                    $lon = current(explode("/", $exif['GPS']['GPSLongitude'][0]));
+                                    $lon .= '.'. round(( (current(explode("/", $exif['GPS']['GPSLongitude'][1]) ) ) * 100 ) / 60 );
+                                    $mapuri = "http://maps.google.com/maps?q=$lat,$lon";
+                                    // $mapaddr = utf8_encode(file_get_contents("http://maps.google.com/maps/geo?q=$lat,$lon&output=csv"));
+                                    $mapaddr = file_get_contents("http://maps.google.com/maps/geo?q=$lat,$lon&output=csv");
+                                    $tags = '';
+                                    $tags .= 'geo:lat='.$lat;
+                                    $tags .= ' geo:lon='.$lon;   
+                                    if (current(explode(",", $mapaddr)) == "200") {
+                                        $mapaddr = next(explode("\"", $mapaddr));
+                                        $prts = explode(',', $mapaddr);
+                                        $tags .= ' "geo:loc='.str_replace(","," ",$mapaddr).'"';
+                                        if (is_string($prts[1]) && trim($prts[1]) !== 'Switzerland') {
+                                            $tags .= ' '.$prts[1] ;
+                                        } else if (is_string($prts[1]) && trim($prts[1]) == 'Switzerland') {
+                                            $tags .= ' '.$prts[0];        
+                                        } else {
+                                            $mapaddr = $mapuri;    
+                                        }
                                     }
                                 }
                             }
-                            
                             //autorotate
                             
                             $tmpname = tempnam("/tmp/","jhead");
