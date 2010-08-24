@@ -388,9 +388,8 @@ if (sizeof($incoming) > 0) {
             if ($category == "") {
                 $category = $userinfo['defaultcat'];
             }
-               
             if ($title == "") {
-                $title = imap_utf8($msg->headers['subject']);
+                $title = decodeMimeStr($msg->headers['subject']);
                 $firstline = trim(array_shift($bodylines));
                 if (strpos(trim($title),$firstline) === 0 || preg_match('#^DSC[0-9]{5}$#',$title))  {
                     $title = $firstline;
@@ -399,6 +398,8 @@ if (sizeof($incoming) > 0) {
                 }
                 
             }
+            
+            
             $title = str_replace('[possible SPAM]','',$title);
    
             if ((!isset($to[1])||empty($to[1])) && isset($password)) {
@@ -832,5 +833,18 @@ function parse_geotags($tags) {
         
 }
     
+function decodeMimeStr($string, $charset="UTF-8" ) 
+{ 
+      $newString = ''; 
+      $elements=imap_mime_header_decode($string); 
+      for($i=0;$i<count($elements);$i++) 
+      { 
+        if ($elements[$i]->charset == 'default') 
+          $elements[$i]->charset = 'iso-8859-1'; 
+        $newString .= iconv($elements[$i]->charset, $charset, $elements[$i]->text); 
+      } 
+      return $newString; 
+} 
+
     
     ?>
